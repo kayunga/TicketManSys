@@ -15,7 +15,7 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Add ATM</h5>
-                <form action="{{ route('atms.store')}}" method="POST">
+                <form id="addAtmForm" action="{{ route('atms.store')}}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label for="city" class="form-label">City</label>
@@ -39,6 +39,30 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Add ATM</button>
                 </form>
+                <div id="atmFormMessage"></div>
+
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    $('#addAtmForm').on('submit', function(e) {
+                        e.preventDefault();
+                        let form = $(this);
+                        $.ajax({
+                            url: form.attr('action')
+                            , method: 'POST'
+                            , data: form.serialize()
+                            , success: function(response) {
+                                $('#atmFormMessage').html('<span style="color:green;">ATM added successfully!</span>');
+                                form[0].reset();
+                            }
+                            , error: function(xhr) {
+                                let errors = xhr.responseJSON ? .errors;
+                                let msg = errors ? Object.values(errors).join('<br>') : 'An error occurred.';
+                                $('#atmFormMessage').html('<span style="color:red;">' + msg + '</span>');
+                            }
+                        });
+                    });
+
+                </script>
             </div>
 
     </main>
